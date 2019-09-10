@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <link href="https://fonts.googleapis.com/css?family=Red+Hat+Display|Red+Hat+Text&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script type="text/javascript" src="skycons.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="left">
+            <div id="dateTime">
+                <div id="time">{{ time }}</div>
+                <div id="date">{{ new Date().toLocaleDateString("en", {weekday: "long", month: "long", day: "numeric"}) }}</div>
+            </div>
+            <div id="weather" v-if="weather">
+                <div id="current">
+                    <a v-bind:href="`https://darksky.net/forecast/${location.lat}/${location.long}`" target="_blank">
+                        <weather-icon v-bind:icon="weather.currently.icon"></weather-icon>
+                        <span id="tempNow">{{ FormatTemperature(weather.currently.temperature) }}</span>
+                        <span id="currentSummary">{{ weather.currently.summary }}</span>
+                    </a>
+                </div>
+                <div id="forecast">
+                    <div v-for="(day, index) in weather.daily.data" v-bind:key="day.time" v-if="index <= 3">
+                        <span>{{ FormatWeekday(day.time) }}</span>
+                        <weather-icon v-bind:icon="day.icon"></weather-icon>
+                        <span>{{ FormatTemperature(day.temperatureHigh) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div id="links">
+                <a href="https://www.google.com/maps">Google Maps</a>
+                <a href="https://www.gmail.com/">Gmail</a>
+                <a href="https://drive.google.com/">Google Drive</a>
+                <a href="https://www.google.com/calendar">Google Calendar</a>
+            </div>
+        </div>
+        <div id="right">
+            <div class="newsItem" v-for="(item, index) in newssources" v-bind:key="index">
+                <h2><a v-bind:href="item.Homepage" target="_blank">{{ item.title }}</a></h2>
+                <ul>
+                   <li v-for="article in item.articles"><a v-bind:href="article.link" target="_blank">{{ article.title }}</a></li> 
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
