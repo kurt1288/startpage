@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
             location: null,
             weather: null,
             time: null,
-            dsapikey: "",
-            newsapikey: "",
+            dsapikey: null,
+            newsapikey: null,
             skycons: new Skycons(),
             newssources: [
                 { title: "Ars Technica", Homepage: "https://arstechnica.com", type: "news", Url: "arstechnica.com", articles: null, gridPosition: 1 },
@@ -22,19 +22,32 @@ document.addEventListener("DOMContentLoaded", function() {
             ]
         },
         mounted: function() {
-            this.location = this.GetLocation();
             this.GetTime();
-            setInterval(() => this.GetTime(), 25);
-            this.GetWeather();
-            this.GetNews();
-            timer = setInterval(() => {
+            this.location = this.GetLocation();
+            if (localStorage.getItem("dsapikey"))
+                this.dsapikey = localStorage.getItem("dsapikey");
+            if (localStorage.getItem("newsapikey"))
+                this.newsapikey = localStorage.getItem("newsapikey");
+        },
+        watch: {
+            dsapikey: function() {
                 this.GetWeather();
+            },
+            newsapikey: function() {
                 this.GetNews();
-                lastUpdated = new Date().getTime();
-            }, 900000);
-            lastUpdated = new Date().getTime();
+            }
         },
         methods: {
+            SaveDSKey: function() {
+                const key = document.getElementById("dsapikey").value;
+                localStorage.setItem("dsapikey", key);
+                this.dsapikey = key;
+            },
+            SaveNewsKey: function() {
+                const key = document.getElementById("newsapikey").value;
+                localStorage.setItem("newsapikey", key);
+                this.newsapikey = key;
+            },
             GetLocation: function() {
                 if (!localStorage.getItem("location")) {
                     navigator.geolocation.getCurrentPosition((position) => {
@@ -50,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
 
                 this.time = new Date().toLocaleTimeString("en", { hour: "numeric", minute: "2-digit" });
+                setTimeout(() => this.GetTime(), 25);
             },
             GetWeather: async function() {
                 if (!this.dsapikey || hidden)
@@ -62,9 +76,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     this.skycons.add("weatherIcon", res.currently.icon);
                     this.skycons.play();
                 });
+
+                setTimeout(() => this.GetWeather(), 900000);
             },
             GetNews: async function() {
-                if (hidden)
+                if (hidden || !this.newsapikey)
                     return;
 
                 for (let item of this.newssources) {
@@ -90,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         item.articles = articles;
                     }
                 }
+
+                setTimeout(() => this.GetNews(), 900000);
             },
             FormatTemperature: function(temp) {
                 return Math.round(temp) + "°";
@@ -108,25 +126,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-
-document.addEventListener("visibilitychange", handleVisibilityChange, false);
-
-function handleVisibilityChange() {
-    if (document["hidden"]) {
-        hidden = true;
-        clearInterval(timer);
-    } else {
-        hidden = false;
-        const currentTime = new Date().getTime();
-        if (currentTime - lastUpdated > 900000)
-        {
-            app.GetWeather();
-            app.GetNews();
-        }
-        timer = setInterval(() => {
-            app.GetWeather();
-            app.GetNews();
-            lastUpdated = new Date().getTime();
-        }, 900000);
-    }
-}

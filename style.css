@@ -1,7 +1,7 @@
 html, body, #container {
     height: 100%;
     margin: 0;
-    font-size: 10px;
+    font-size: 8px;
     font-family: "Red Hat Display";
 }
 
@@ -20,13 +20,14 @@ body {
     padding: 0 4rem;
 }
 
-#right {
+#newsContainer {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, calc(100%/3));
+    height: 100%;
 }
 
-#dateTime, #weather, #links {
+#dateTime, #weatherContainer, #links {
     justify-content: center;
     display: flex;
     flex-direction: column;
@@ -50,15 +51,15 @@ body {
     grid-template-columns: repeat(4, 1fr);
 }
 
-#weather span, #weather canvas {
+#weatherContainer span, #weatherContainer canvas {
     vertical-align: middle;
 }
 
-#weather canvas {
+#weatherContainer canvas {
     width: 5rem;
 }
 
-#weather span {
+#weatherContainer span {
     font-size: 3rem;
 }
 
@@ -71,23 +72,54 @@ body {
     margin-left: 1rem;
 }
 
-#weather #forecast > div {
+#weatherContainer #forecast > div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+#weatherContainer #apiKey, #newsKeyRequired {
+    text-align: center;
+}
+
+#apiKey p, #apiKey label, #newsKeyRequired p, #newsKeyRequired label {
+    font-size: 2rem;
+}
+
+#apiKey input, #newsKeyRequired input {
+    padding: 0.7rem;
+    font-family: "Red Hat Text";
+    display: block;
+    width: 30rem;
+    margin: 1rem auto;
+}
+
+#apiKey button, #newsKeyRequired button {
+    padding: 1rem;
+    border: none;
+    background-color: #00A000;
+    border-radius: 0.4rem;
+    color: white;
+    width: 8rem;
+    cursor: pointer;
+    outline: none;
+}
+
+#apiKey button:hover, #newsKeyRequired button:hover {
+    background-color: rgba(0, 170, 0, 1);
+}
+
 #links {
     grid-row-start: 3;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: repeat(3,minmax(min-content,max-content));
 }
 
 #links a {
     display: block;
     font-size: 2.5rem;
     padding: 1.5rem;
-    box-sizing: border-box;
-    border-left: 0.1rem solid white;
-    border-bottom: 0.1rem solid white;
 }
 
 .newsItem {
@@ -124,4 +156,55 @@ a {
 
 a:hover {
     color: rgba(200, 0, 0, 0.9);
+}
+
+@media (min-height: 1400px) {
+    html, body, #container {
+        font-size: 14px;
+    }
+}
+
+@media (min-height: 1000px) {
+    html, body, #container {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 1000px) {
+    #container {
+        grid-template-columns: unset;
+    }
+
+    #left {
+        grid-template-rows: unset;
+    }
+}
+
+@media (max-width: 500px) {
+    #dateTime {
+        display: none;
+    }
+
+    #weatherContainer, #links {
+        margin: 1rem 0;
+    }
+
+    #newsContainer {
+        display: block;
+    }
+
+    #newsContainer ul {
+        margin: 0;
+    }
+
+    .newsItem li {
+        border: 1px solid #cecece;
+        padding: 2rem;
+        border-radius: 0.6rem;
+        box-shadow: 0 1px 3px -2px black;
+    }
+
+    .newsItem li a {
+        font-size: 2.1rem
+    }
 }
