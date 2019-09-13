@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
         mounted: function() {
             this.GetTime();
             this.location = this.GetLocation();
-            if (localStorage.getItem("dsapikey"))
-                this.dsapikey = localStorage.getItem("dsapikey");
-            if (localStorage.getItem("newsapikey"))
-                this.newsapikey = localStorage.getItem("newsapikey");
+            if (dsapikey)
+                this.dsapikey = dsapikey;
+            if (newsapikey)
+                this.newsapikey = newsapikey;
         },
         watch: {
             dsapikey: function() {
@@ -38,16 +38,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         },
         methods: {
-            SaveDSKey: function() {
-                const key = document.getElementById("dsapikey").value;
-                localStorage.setItem("dsapikey", key);
-                this.dsapikey = key;
-            },
-            SaveNewsKey: function() {
-                const key = document.getElementById("newsapikey").value;
-                localStorage.setItem("newsapikey", key);
-                this.newsapikey = key;
-            },
             GetLocation: function() {
                 if (!localStorage.getItem("location")) {
                     navigator.geolocation.getCurrentPosition((position) => {

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script type="text/javascript" src="skycons.js"></script>
+    <script type="text/javascript" src="keys.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
@@ -20,10 +21,7 @@
             </div>
             <div id="weatherContainer">
                 <div id="apiKey" v-if="!dsapikey">
-                    <p>Weather requires an API key.<br>Click <a href="https://darksky.net/dev" target="_blank">here</a> to register for one.</p>
-                    <label for="dsapikey">Enter your key:</label>
-                    <input type="text" id="dsapikey" />
-                    <button id="saveDsKey" v-on:click="SaveDSKey">Save</button>
+                    <p>Weather requires an API key.<br>Click <a href="https://darksky.net/dev" target="_blank">here</a> to register for one.<br>Add the key to the "keys.js" file.</p>
                 </div>
                 <div id="weather" v-if="weather">
                     <div id="current">
@@ -32,6 +30,7 @@
                             <span id="tempNow">{{ FormatTemperature(weather.currently.temperature) }}</span>
                             <span id="currentSummary">{{ weather.currently.summary }}</span>
                         </a>
+                        <p>{{ weather.hourly.summary }}</p>
                     </div>
                     <div id="forecast">
                         <div v-for="(day, index) in weather.daily.data" v-bind:key="day.time" v-if="index <= 3">
@@ -40,6 +39,7 @@
                             <span>{{ FormatTemperature(day.temperatureHigh) }}</span>
                         </div>
                     </div>
+                    <p id="weekSummary">{{ weather.daily.summary }}</p>
                 </div>
             </div>
             <div id="links">
@@ -61,10 +61,7 @@
                 </div>
             </div>
             <div id="newsKeyRequired" v-else>
-                <p>News requires an API key.<br>Click <a href="https://newsapi.org/" target="_blank">here</a> to register for one.</p>
-                <label for="newsapikey">Enter your key:</label>
-                <input type="text" id="newsapikey" />
-                <button id="saveNewsKey" v-on:click="SaveNewsKey">Save</button>
+                <p>News requires an API key.<br>Click <a href="https://newsapi.org/" target="_blank">here</a> to register for one.<br>Add the key to the "keys.js" file.</p>
             </div>
         </div>
     </div>
